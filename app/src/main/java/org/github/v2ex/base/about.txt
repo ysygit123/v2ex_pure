@@ -1,0 +1,4 @@
+说明:
+1. 该目录主要定义一些公共的Activity，Fragment，Adapter等其他文件需要继承的父类，如BaseActivity，BaseFragment，BaseAdapter
+2. 对于一些基础性的数据，如第三方key，网页url等常量数据，可以统一放在Constants.java文件中，并放置于该目录中
+

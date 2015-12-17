@@ -37,7 +37,7 @@ public class APIClient implements V2EXAPI {
    *
    * @return OkHttpClient
    */
-  private static OkHttpClient httpInstance() {
+  public static OkHttpClient httpInstance() {
     if (client == null) {
       synchronized (OkHttpClient.class) {
         if (client == null) {

@@ -1,12 +1,14 @@
-package org.github.v2ex;
+package org.github.v2ex.fragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.github.v2ex.R;
 import org.github.v2ex.api.APIClient;
 import org.github.v2ex.api.Callback;
 
