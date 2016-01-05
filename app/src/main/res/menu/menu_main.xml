@@ -2,24 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
-
-    <item
-        android:id="@+id/action_edit"
-        android:icon="@mipmap/ab_edit"
-        android:orderInCategory="80"
-        android:title="@string/action_edit"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_share"
-        android:icon="@mipmap/ab_share"
-        android:orderInCategory="90"
-        android:title="@string/action_edit"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+  <item android:id="@+id/action_settings"
+      android:title="@string/action_settings"
+      android:orderInCategory="100"
+      app:showAsAction="never"/>
 </menu>

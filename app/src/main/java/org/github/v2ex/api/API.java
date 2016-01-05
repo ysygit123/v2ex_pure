@@ -1,12 +1,12 @@
 package org.github.v2ex.api;
 
 import android.util.Log;
-import org.github.v2ex.BuildConfig;
+import org.github.v2ex.V2EXConfig;
 
 /**
  * Created by syxc on 15/12/15.
  */
-public enum API {
+public enum Api {
 
   /**
    * site/info.json
@@ -16,21 +16,21 @@ public enum API {
 
   private final String text;
 
-  API(final String text) {
+  Api(final String text) {
     this.text = text;
   }
 
-  String raw() {
+  public String raw() {
     return this.toString();
   }
 
   @Override public String toString() {
-    String HOST = "https://www.v2ex.com/api";
-    if (BuildConfig.DEBUG) {
-      HOST = "http://www.v2ex.com/api";
+    String HOST = V2EXConfig.HOST;
+    if (V2EXConfig.DEBUG) {
+      HOST = V2EXConfig.DEV_HOST;
     }
 
-    Log.i("API", "API url: " + HOST + text);
+    Log.i("Api", "Api url: " + HOST + text);
 
     return HOST + text;
   }

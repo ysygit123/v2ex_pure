@@ -1,31 +1,39 @@
 package org.github.v2ex.api;
 
 import android.util.Log;
+import android.widget.Toast;
+import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
+import org.github.v2ex.model.InfoModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by syxc on 15/12/15.
  */
-public class APIClient implements V2EXAPI {
+public class ApiClient implements V2EXAPI {
 
-  private static final String TAG = "APIClient";
+  private static Logger logger = LoggerFactory.getLogger(ApiClient.class);
 
-  private static APIClient instance = null;
+  private static ApiClient instance = null;
 
   private static OkHttpClient client = null;
 
-  protected APIClient() {
+  protected ApiClient() {
     client = httpInstance();
   }
 
-  public static APIClient instance() {
+  public static ApiClient instance() {
     if (instance == null) {
-      synchronized (APIClient.class) {
+      synchronized (ApiClient.class) {
         if (instance == null) {
-          instance = new APIClient();
+          instance = new ApiClient();
         }
       }
     }
@@ -37,7 +45,7 @@ public class APIClient implements V2EXAPI {
    *
    * @return OkHttpClient
    */
-  public static OkHttpClient httpInstance() {
+  private static OkHttpClient httpInstance() {
     if (client == null) {
       synchronized (OkHttpClient.class) {
         if (client == null) {
@@ -54,26 +62,35 @@ public class APIClient implements V2EXAPI {
    * @param url site/info.json
    * @param callback Callback
    */
-  @Override public void fetchSiteInfo(String url, final Callback callback) throws Exception {
+  @Override public void fetchSiteInfo(String url, final Callback<InfoModel> callback)
+      throws Exception {
     if (url == null) {
-      url = API.SITE_INFO.raw();
+      url = Api.SITE_INFO.raw();
     }
 
-    Request request = new Request.Builder().url(url).build();
+    final Request request = new Request.Builder().url(url).build();
+    RxOkHttp.request(httpInstance(), request)
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Subscriber<Response>() {
+          @Override public void onCompleted() {
+            // do nothing
+          }
 
-    client.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
-      @Override public void onFailure(Request request, IOException e) {
-        callback.failure("Request fail");
-        e.printStackTrace();
-      }
+          @Override public void onError(Throwable e) {
+            logger.error(e.getMessage());
+            callback.failure(e.getLocalizedMessage());
+          }
 
-      @Override public void onResponse(Response response) throws IOException {
-        if (!response.isSuccessful()) {
-          throw new IOException("Unexpected code " + response);
-        }
-        callback.success(response.body().string());
-        Log.i(TAG, "response: " + response.body().string());
-      }
-    });
+          @Override public void onNext(Response response) {
+            try {
+              String data = response.body().string();
+              logger.info(data);
+              callback.success(new Gson().fromJson(data, InfoModel.class));
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        });
   }
 }

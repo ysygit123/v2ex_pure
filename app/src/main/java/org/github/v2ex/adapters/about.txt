@@ -1,5 +1,0 @@
-说明:
-1. 放置Listview ，GridView ，RecyclerView等的适配器
-2.
-
-
