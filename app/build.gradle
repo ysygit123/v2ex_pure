@@ -52,6 +52,7 @@ dependencies {
   compile deps.recyclerview
   compile deps.butterknife
   compile deps.okhttp
+  compile deps.okhttp_interceptor
   compile deps.glide
   compile deps.gson
   compile deps.rxjava

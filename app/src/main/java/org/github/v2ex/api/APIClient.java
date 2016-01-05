@@ -1,10 +1,6 @@
 package org.github.v2ex.api;
 
-import android.util.Log;
-import android.widget.Toast;
 import com.google.gson.Gson;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
 import org.github.v2ex.model.InfoModel;
@@ -17,16 +13,18 @@ import rx.schedulers.Schedulers;
 /**
  * Created by syxc on 15/12/15.
  */
-public class ApiClient implements V2EXAPI {
+public final class ApiClient implements V2EXAPI {
 
   private static Logger logger = LoggerFactory.getLogger(ApiClient.class);
 
   private static ApiClient instance = null;
 
-  private static OkHttpClient client = null;
+  // OkHttpClientFactory
+  private final OkHttpClientFactory FACTORY = new OkHttpClientFactory();
+  // Gson
+  private static final Gson GSON = new Gson();
 
   protected ApiClient() {
-    client = httpInstance();
   }
 
   public static ApiClient instance() {
@@ -40,20 +38,16 @@ public class ApiClient implements V2EXAPI {
     return instance;
   }
 
-  /**
-   * Get OkHttpClient Instance
-   *
-   * @return OkHttpClient
-   */
-  private static OkHttpClient httpInstance() {
-    if (client == null) {
-      synchronized (OkHttpClient.class) {
-        if (client == null) {
-          client = new OkHttpClient();
-        }
-      }
+  public OkHttpClientFactory getClientFactory() {
+    return FACTORY;
+  }
+
+  public void destroy() {
+    try {
+      FACTORY.destroy();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    return client;
   }
 
   /**
@@ -68,8 +62,7 @@ public class ApiClient implements V2EXAPI {
       url = Api.SITE_INFO.raw();
     }
 
-    final Request request = new Request.Builder().url(url).build();
-    RxOkHttp.request(httpInstance(), request)
+    RxOkHttp.request(FACTORY.client, FACTORY.createRequest(url))
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<Response>() {
@@ -86,9 +79,15 @@ public class ApiClient implements V2EXAPI {
             try {
               String data = response.body().string();
               logger.info(data);
-              callback.success(new Gson().fromJson(data, InfoModel.class));
+              callback.success(GSON.fromJson(data, InfoModel.class));
             } catch (IOException e) {
               e.printStackTrace();
+            } finally {
+              try {
+                response.body().close();
+              } catch (IOException e) {
+                // ignore
+              }
             }
           }
         });
