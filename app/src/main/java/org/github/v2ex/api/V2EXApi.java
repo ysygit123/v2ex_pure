@@ -5,7 +5,7 @@ import org.github.v2ex.model.InfoModel;
 /**
  * Created by syxc on 15/12/15.
  */
-public interface V2EXAPI {
+public interface V2EXApi {
 
   /**
    * 获取社区介绍
