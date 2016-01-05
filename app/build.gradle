@@ -59,7 +59,3 @@ dependencies {
   compile deps.slf4j_api
   compile deps.slf4j_simple
 }
-
-//retrolambda {
-//  javaVersion JavaVersion.VERSION_1_7
-//}
