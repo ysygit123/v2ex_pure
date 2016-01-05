@@ -11,6 +11,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
+ * Http request layer
  * Created by syxc on 15/12/15.
  */
 public final class ApiClient implements V2EXAPI {
