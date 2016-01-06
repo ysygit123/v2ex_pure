@@ -12,9 +12,10 @@ import timber.log.Timber;
  */
 public final class OkHttpUtil {
 
-  private static final OkHttpClient client = new OkHttpClient();
+  private static final OkHttpClient client;
 
   static {
+    client = new OkHttpClient();
     if (V2EXConfig.DEBUG) {
       // HttpLoggingInterceptor
       HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

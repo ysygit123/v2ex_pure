@@ -22,9 +22,10 @@ public final class ApiClient implements V2EXApi {
   private static ApiClient instance = null;
 
   // Moshi
-  private static final Moshi moshi = new Moshi.Builder().build();
+  private static final Moshi moshi;
 
-  private ApiClient() {
+  static {
+    moshi = new Moshi.Builder().build();
   }
 
   public static ApiClient instance() {
