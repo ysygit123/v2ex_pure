@@ -32,8 +32,6 @@ ext.deps = [
   gson         : 'com.google.code.gson:gson:2.5',
   rxjava       : 'io.reactivex:rxjava:1.1.0',
   rxandroid    : 'io.reactivex:rxandroid:1.1.0',
-  slf4j_api    : 'org.slf4j:slf4j-api:1.7.13',
-  slf4j_simple : 'org.slf4j:slf4j-simple:1.7.13',
 
   // Unit testing dependencies
   junit        : 'junit:junit:4.12',

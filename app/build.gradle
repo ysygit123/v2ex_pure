@@ -72,7 +72,4 @@ dependencies {
   compile deps.gson
   compile deps.rxjava
   compile deps.rxandroid
-  compile deps.slf4j_api
-  compile deps.slf4j_simple
-  androidTestCompile 'junit:junit:4.12'
 }

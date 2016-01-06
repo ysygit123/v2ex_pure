@@ -7,19 +7,16 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import org.github.v2ex.V2EXConfig;
 import org.github.v2ex.model.InfoModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Http request layer
  * Created by syxc on 15/12/15.
  */
 public final class ApiClient implements V2EXApi {
-
-  private static Logger logger = LoggerFactory.getLogger(ApiClient.class);
 
   private static ApiClient instance = null;
 
@@ -79,14 +76,14 @@ public final class ApiClient implements V2EXApi {
           }
 
           @Override public void onError(Throwable e) {
-            logger.error(e.getMessage());
+            Timber.e(e.getMessage());
             callback.failure(e.getLocalizedMessage());
           }
 
           @Override public void onNext(Response response) {
             try {
               String data = response.body().string();
-              logger.info(data);
+              Timber.i(data);
               callback.success(GSON.fromJson(data, InfoModel.class));
             } catch (IOException e) {
               e.printStackTrace();

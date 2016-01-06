@@ -1,7 +1,7 @@
 package org.github.v2ex.fragment;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +10,12 @@ import org.github.v2ex.R;
 import org.github.v2ex.api.ApiClient;
 import org.github.v2ex.api.Callback;
 import org.github.v2ex.model.InfoModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
-  private static Logger logger = LoggerFactory.getLogger(MainActivityFragment.class);
 
   public MainActivityFragment() {
   }
@@ -41,7 +38,7 @@ public class MainActivityFragment extends Fragment {
     try {
       ApiClient.instance().fetchSiteInfo(null, new Callback<InfoModel>() {
         @Override public void success(final InfoModel infoModel) {
-          logger.info("data: " + infoModel.toString());
+          Timber.i("data: %s", infoModel.toString());
           Toast.makeText(getContext(), infoModel.description, Toast.LENGTH_SHORT).show();
         }
 

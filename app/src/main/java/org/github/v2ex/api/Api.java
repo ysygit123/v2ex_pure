@@ -1,7 +1,7 @@
 package org.github.v2ex.api;
 
-import android.util.Log;
 import org.github.v2ex.V2EXConfig;
+import timber.log.Timber;
 
 /**
  * Created by syxc on 15/12/15.
@@ -30,7 +30,7 @@ public enum Api {
       HOST = V2EXConfig.DEV_HOST;
     }
 
-    Log.i("Api", "Api url: " + HOST + text);
+    Timber.i("Api url: %s", HOST + text);
 
     return HOST + text;
   }

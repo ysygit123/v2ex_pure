@@ -5,15 +5,12 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import java.util.concurrent.TimeUnit;
 import org.github.v2ex.V2EXConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import timber.log.Timber;
 
 /**
  * Created by syxc on 1/6/16.
  */
 public final class OkHttpUtil {
-
-  private static Logger logger = LoggerFactory.getLogger(ApiClient.class);
 
   private static final OkHttpClient client = new OkHttpClient();
 
@@ -27,7 +24,7 @@ public final class OkHttpUtil {
   }
 
   public static OkHttpClient getClient() {
-    logger.info("OkHttpClient instance: {}", client);
+    Timber.i("OkHttpClient instance: %s", client);
     return client;
   }
 
