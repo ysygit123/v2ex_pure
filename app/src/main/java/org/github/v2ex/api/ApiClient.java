@@ -1,6 +1,7 @@
 package org.github.v2ex.api;
 
-import com.google.gson.Gson;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -20,8 +21,8 @@ public final class ApiClient implements V2EXApi {
 
   private static ApiClient instance = null;
 
-  // Gson
-  private static final Gson GSON = new Gson();
+  // Moshi
+  private static final Moshi moshi = new Moshi.Builder().build();
 
   private ApiClient() {
   }
@@ -84,7 +85,8 @@ public final class ApiClient implements V2EXApi {
             try {
               String data = response.body().string();
               Timber.i(data);
-              callback.success(GSON.fromJson(data, InfoModel.class));
+              JsonAdapter<InfoModel> jsonAdapter = moshi.adapter(InfoModel.class);
+              callback.success(jsonAdapter.fromJson(data));
             } catch (IOException e) {
               e.printStackTrace();
             } finally {

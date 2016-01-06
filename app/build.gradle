@@ -69,7 +69,7 @@ dependencies {
   compile deps.okio
   compile deps.okinterceptor
   compile deps.glide
-  compile deps.gson
+  compile deps.moshi
   compile deps.rxjava
   compile deps.rxandroid
 }
