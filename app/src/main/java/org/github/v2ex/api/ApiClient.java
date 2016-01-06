@@ -1,8 +1,11 @@
 package org.github.v2ex.api;
 
 import com.google.gson.Gson;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
+import org.github.v2ex.V2EXConfig;
 import org.github.v2ex.model.InfoModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +23,10 @@ public final class ApiClient implements V2EXApi {
 
   private static ApiClient instance = null;
 
-  // OkHttpClientFactory
-  private final OkHttpClientFactory FACTORY = new OkHttpClientFactory();
   // Gson
   private static final Gson GSON = new Gson();
 
-  protected ApiClient() {
+  private ApiClient() {
   }
 
   public static ApiClient instance() {
@@ -39,15 +40,21 @@ public final class ApiClient implements V2EXApi {
     return instance;
   }
 
-  public OkHttpClientFactory getClientFactory() {
-    return FACTORY;
+  OkHttpClient getClient() {
+    return OkHttpUtil.getClient();
+  }
+
+  Request getRequest(String url) {
+    return OkHttpUtil.createRequest(url);
   }
 
   public void destroy() {
     try {
-      FACTORY.destroy();
+      OkHttpUtil.destroy();
     } catch (Exception e) {
-      e.printStackTrace();
+      if (V2EXConfig.DEBUG) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -63,7 +70,7 @@ public final class ApiClient implements V2EXApi {
       url = Api.SITE_INFO.raw();
     }
 
-    RxOkHttp.request(FACTORY.client, FACTORY.createRequest(url))
+    RxOkHttp.request(getClient(), getRequest(url))
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<Response>() {

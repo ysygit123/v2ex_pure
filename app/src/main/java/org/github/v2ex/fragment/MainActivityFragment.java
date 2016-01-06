@@ -30,6 +30,14 @@ public class MainActivityFragment extends Fragment {
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    loadData();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+  }
+
+  void loadData() {
     try {
       ApiClient.instance().fetchSiteInfo(null, new Callback<InfoModel>() {
         @Override public void success(final InfoModel infoModel) {

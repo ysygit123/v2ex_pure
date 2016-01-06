@@ -35,11 +35,17 @@ android {
     exclude 'META-INF/license.txt'
     exclude 'META-INF/dependencies.txt'
     exclude 'META-INF/LGPL2.1'
+    exclude 'LICENSE.txt'
+    exclude 'LICENSE'
   }
 
   lintOptions {
     disable 'MissingTranslation', 'ExtraTranslation'
     abortOnError false
+    textReport true
+    textOutput 'stdout'
+    fatal 'UnusedResources'
+    warning 'ResourceType' // TODO remove eventually with ButterKnife 8.0 release
   }
 
   buildTypes {
@@ -53,16 +59,20 @@ android {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   testCompile deps.junit
+  testCompile deps.mockito
   compile deps.appcompat
   compile deps.design
   compile deps.recyclerview
   compile deps.butterknife
+  compile deps.timber
   compile deps.okhttp
-  compile deps.okhttp_interceptor
+  compile deps.okio
+  compile deps.okinterceptor
   compile deps.glide
   compile deps.gson
   compile deps.rxjava
   compile deps.rxandroid
   compile deps.slf4j_api
   compile deps.slf4j_simple
+  androidTestCompile 'junit:junit:4.12'
 }
