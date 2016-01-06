@@ -13,9 +13,15 @@ android {
     versionName rootProject.ext.versionName
   }
 
+  // Retrolambda
   compileOptions {
     sourceCompatibility rootProject.ext.sourceCompatibility
     targetCompatibility rootProject.ext.targetCompatibility
+  }
+
+  // Open dex incremental compiler
+  dexOptions {
+    incremental true
   }
 
   packagingOptions {

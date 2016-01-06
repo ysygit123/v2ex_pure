@@ -17,10 +17,12 @@ ext {
 }
 
 ext.deps = [
-  // Libraries dependencies
+  // Support dependencies
   appcompat         : 'com.android.support:appcompat-v7:23.1.1',
   design            : 'com.android.support:design:23.1.1',
   recyclerview      : 'com.android.support:recyclerview-v7:23.1.1',
+
+  // Base dependencies
   butterknife       : 'com.jakewharton:butterknife:7.0.1',
   okhttp            : 'com.squareup.okhttp:okhttp:2.7.1',
   okhttp_interceptor: 'com.squareup.okhttp:logging-interceptor:2.7.1',
