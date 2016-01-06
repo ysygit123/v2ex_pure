@@ -11,6 +11,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import java.util.concurrent.TimeUnit;
+import org.github.v2ex.V2EXConfig;
 import org.github.v2ex.api.protocol.HttpClientRequest;
 import org.github.v2ex.api.protocol.HttpClientResponse;
 import org.springframework.util.Assert;
@@ -32,10 +33,12 @@ final class OkHttpClientFactory implements HttpClientRequest {
   public OkHttpClientFactory() {
     this.client = new OkHttpClient();
     this.defaultClient = true;
-    // HttpLoggingInterceptor
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    logging.setLevel(Level.BODY);
-    this.client.interceptors().add(logging);
+    if (V2EXConfig.DEBUG) {
+      // HttpLoggingInterceptor
+      HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+      logging.setLevel(Level.BODY);
+      this.client.interceptors().add(logging);
+    }
   }
 
   /**
