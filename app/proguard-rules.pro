@@ -16,27 +16,5 @@
 #   public *;
 #}
 
-# ---------- ButterKnife ----------
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
-
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
-
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
-
-# ---------- EventBus ----------
--keepclassmembers class ** {
-    public void onEvent*(***);
-}
-
-# Only required if you use AsyncExecutor
--keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
-    <init>(java.lang.Throwable);
-}
-# ---------- Picasso ----------
--dontwarn com.squareup.okhttp.**
+# gradle-retrolambda
+-dontwarn java.lang.invoke.*
