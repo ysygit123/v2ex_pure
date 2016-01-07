@@ -1,32 +1,31 @@
 package org.github.v2ex.api;
 
-import android.util.Log;
-import android.widget.Toast;
-import com.google.gson.Gson;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
+import org.github.v2ex.V2EXConfig;
 import org.github.v2ex.model.InfoModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
+ * Http request layer
  * Created by syxc on 15/12/15.
  */
-public class ApiClient implements V2EXAPI {
-
-  private static Logger logger = LoggerFactory.getLogger(ApiClient.class);
+public final class ApiClient implements V2EXApi {
 
   private static ApiClient instance = null;
 
-  private static OkHttpClient client = null;
+  // Moshi
+  private static final Moshi moshi;
 
-  protected ApiClient() {
-    client = httpInstance();
+  static {
+    moshi = new Moshi.Builder().build();
   }
 
   public static ApiClient instance() {
@@ -40,20 +39,22 @@ public class ApiClient implements V2EXAPI {
     return instance;
   }
 
-  /**
-   * Get OkHttpClient Instance
-   *
-   * @return OkHttpClient
-   */
-  private static OkHttpClient httpInstance() {
-    if (client == null) {
-      synchronized (OkHttpClient.class) {
-        if (client == null) {
-          client = new OkHttpClient();
-        }
+  OkHttpClient getClient() {
+    return OkHttpUtil.getClient();
+  }
+
+  Request getRequest(String url) {
+    return OkHttpUtil.createRequest(url);
+  }
+
+  public void destroy() {
+    try {
+      OkHttpUtil.destroy();
+    } catch (Exception e) {
+      if (V2EXConfig.DEBUG) {
+        e.printStackTrace();
       }
     }
-    return client;
   }
 
   /**
@@ -68,8 +69,7 @@ public class ApiClient implements V2EXAPI {
       url = Api.SITE_INFO.raw();
     }
 
-    final Request request = new Request.Builder().url(url).build();
-    RxOkHttp.request(httpInstance(), request)
+    RxOkHttp.request(getClient(), getRequest(url))
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Subscriber<Response>() {
@@ -78,17 +78,24 @@ public class ApiClient implements V2EXAPI {
           }
 
           @Override public void onError(Throwable e) {
-            logger.error(e.getMessage());
+            Timber.e(e.getMessage());
             callback.failure(e.getLocalizedMessage());
           }
 
           @Override public void onNext(Response response) {
             try {
               String data = response.body().string();
-              logger.info(data);
-              callback.success(new Gson().fromJson(data, InfoModel.class));
+              Timber.i(data);
+              JsonAdapter<InfoModel> jsonAdapter = moshi.adapter(InfoModel.class);
+              callback.success(jsonAdapter.fromJson(data));
             } catch (IOException e) {
               e.printStackTrace();
+            } finally {
+              try {
+                response.body().close();
+              } catch (IOException e) {
+                // ignore
+              }
             }
           }
         });

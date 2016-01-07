@@ -11,19 +11,17 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 /**
  * Courtesy of @paulcbetts paulcbetts@github
  * https://gist.github.com/paulcbetts/2274581f24ded7502011
  */
 public final class RxOkHttp {
-  private static Logger logger = LoggerFactory.getLogger(RxOkHttp.class);
 
   public static Observable<Response> request(OkHttpClient client, Request request) {
     return Observable.create((Subscriber<? super Response> subj) -> {
@@ -37,7 +35,7 @@ public final class RxOkHttp {
         }
 
         @Override public void onResponse(Response response) throws IOException {
-          logger.info("[response]=" + response);
+          Timber.i("[response]=%s", response);
 
           Throwable error = getFailureExceptionOnBadStatus(response);
           if (error != null) {
